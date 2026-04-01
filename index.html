@@ -219,8 +219,8 @@ async function generatePDF(){
   var page=doc.addPage([W,H]);var y=H-30;
 
   function np(n){if(y-n<40){page=doc.addPage([W,H]);y=H-30}}
-  if(logoImg){var s=logoImg.scale(0.12);page.drawImage(logoImg,{x:W/2-s.width/2,y:y-s.height,width:s.width,height:s.height});y-=s.height+4}
-  page.drawText('FICHA DE FILIA\u00c7\u00c3O',{x:W/2-fontB.widthOfTextAtSize('FICHA DE FILIACAO',16)/2,y:y,size:16,font:fontB,color:navy});y-=20;
+  if(logoImg){var s=logoImg.scale(0.10);page.drawImage(logoImg,{x:W/2-s.width/2,y:y-s.height,width:s.width,height:s.height});y-=s.height+12}
+  page.drawText('FICHA DE FILIA\u00c7\u00c3O',{x:W/2-fontB.widthOfTextAtSize('FICHA DE FILIACAO',16)/2,y:y,size:16,font:fontB,color:navy});y-=24;
   page.drawLine({start:{x:ML,y:y},end:{x:W-MR,y:y},thickness:2,color:orange});y-=16;
 
   function sec(t){np(30);y-=8;page.drawText(t,{x:ML,y:y,size:9,font:fontB,color:orange});y-=3;page.drawLine({start:{x:ML,y:y},end:{x:W-MR,y:y},thickness:0.8,color:orange});y-=10}
