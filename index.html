@@ -220,13 +220,13 @@ async function generatePDF(){
 
   function np(n){if(y-n<40){page=doc.addPage([W,H]);y=H-30}}
   if(logoImg){var s=logoImg.scale(0.12);page.drawImage(logoImg,{x:W/2-s.width/2,y:y-s.height,width:s.width,height:s.height});y-=s.height+4}
-  page.drawText('FICHA DE FILIAC\u0303O',{x:W/2-fontB.widthOfTextAtSize('FICHA DE FILIACAO',16)/2,y:y,size:16,font:fontB,color:navy});y-=20;
+  page.drawText('FICHA DE FILIA\u00c7\u00c3O',{x:W/2-fontB.widthOfTextAtSize('FICHA DE FILIACAO',16)/2,y:y,size:16,font:fontB,color:navy});y-=20;
   page.drawLine({start:{x:ML,y:y},end:{x:W-MR,y:y},thickness:2,color:orange});y-=16;
 
   function sec(t){np(30);y-=8;page.drawText(t,{x:ML,y:y,size:9,font:fontB,color:orange});y-=3;page.drawLine({start:{x:ML,y:y},end:{x:W-MR,y:y},thickness:0.8,color:orange});y-=10}
-  function df(l,val){np(16);var lw=fontB.widthOfTextAtSize(l+': ',7.5);page.drawText(l+': ',{x:ML,y:y,size:7.5,font:fontB,color:blue});page.drawText(val||'\u2014',{x:ML+lw,y:y,size:8.5,font:font,color:navy});y-=13}
-  function dfr(l1,v1,l2,v2){np(16);var mid=ML+CW/2;var lw1=fontB.widthOfTextAtSize(l1+': ',7.5);page.drawText(l1+': ',{x:ML,y:y,size:7.5,font:fontB,color:blue});page.drawText(v1||'\u2014',{x:ML+lw1,y:y,size:8.5,font:font,color:navy});var lw2=fontB.widthOfTextAtSize(l2+': ',7.5);page.drawText(l2+': ',{x:mid,y:y,size:7.5,font:fontB,color:blue});page.drawText(v2||'\u2014',{x:mid+lw2,y:y,size:8.5,font:font,color:navy});y-=13}
-  function dr(l,val,opts){np(16);var lw=fontB.widthOfTextAtSize(l+': ',7.5);page.drawText(l+': ',{x:ML,y:y,size:7.5,font:fontB,color:blue});var cx=ML+lw;opts.forEach(function(o){var ch=val===o;page.drawText(ch?'\u25CF ':'\u25CB ',{x:cx,y:y,size:8,font:font,color:ch?orange:lgray});cx+=font.widthOfTextAtSize(ch?'\u25CF ':'\u25CB ',8);page.drawText(o,{x:cx,y:y,size:8,font:font,color:ch?navy:lgray});cx+=font.widthOfTextAtSize(o,8)+12});y-=13}
+  function df(l,val){np(16);var lw=fontB.widthOfTextAtSize(l+': ',7.5);page.drawText(l+': ',{x:ML,y:y,size:7.5,font:fontB,color:blue});page.drawText(val||' - ',{x:ML+lw,y:y,size:8.5,font:font,color:navy});y-=13}
+  function dfr(l1,v1,l2,v2){np(16);var mid=ML+CW/2;var lw1=fontB.widthOfTextAtSize(l1+': ',7.5);page.drawText(l1+': ',{x:ML,y:y,size:7.5,font:fontB,color:blue});page.drawText(v1||' - ',{x:ML+lw1,y:y,size:8.5,font:font,color:navy});var lw2=fontB.widthOfTextAtSize(l2+': ',7.5);page.drawText(l2+': ',{x:mid,y:y,size:7.5,font:fontB,color:blue});page.drawText(v2||' - ',{x:mid+lw2,y:y,size:8.5,font:font,color:navy});y-=13}
+  function dr(l,val,opts){np(16);var lw=fontB.widthOfTextAtSize(l+': ',7.5);page.drawText(l+': ',{x:ML,y:y,size:7.5,font:fontB,color:blue});var cx=ML+lw;opts.forEach(function(o){var ch=val===o;page.drawText(ch?'(X) ':'( ) ',{x:cx,y:y,size:8,font:font,color:ch?orange:lgray});cx+=font.widthOfTextAtSize(ch?'(X) ':'( ) ',8);page.drawText(o,{x:cx,y:y,size:8,font:font,color:ch?navy:lgray});cx+=font.widthOfTextAtSize(o,8)+12});y-=13}
 
   sec('DADOS ELEITORAIS');
   dfr('T\u00edtulo eleitoral',v('f_tit'),'Munic\u00edpio do t\u00edtulo/UF',v('f_mun_tit'));
@@ -251,7 +251,7 @@ async function generatePDF(){
   if(v('f_nome_urna'))df('Nome de urna',v('f_nome_urna'));
 
   sec('ENDERE\u00c7O');
-  var ef=v('f_end')+(v('f_num')?', N\u00ba '+v('f_num'):'')+(v('f_comp')?' \u2014 '+v('f_comp'):'');
+  var ef=v('f_end')+(v('f_num')?', N\u00ba '+v('f_num'):'')+(v('f_comp')?'  -  '+v('f_comp'):'');
   df('Endere\u00e7o',ef);
   dfr('Bairro',v('f_bairro'),'CEP',v('f_cep'));
   df('Munic\u00edpio/UF',v('f_mun_uf'));
@@ -264,8 +264,8 @@ async function generatePDF(){
 
   np(100);y-=16;
   page.drawText('De acordo com a LGPD, os dados sinalizados s\u00e3o considerados sens\u00edveis.',{x:ML,y:y,size:6,font:font,color:gray});y-=12;
-  page.drawText('\u25CF Consinto com o uso dos meus dados pessoais sens\u00edveis conforme art. 11, I, da LGPD.',{x:ML,y:y,size:6.5,font:font,color:navy});y-=10;
-  page.drawText('\u25CF Declaro estar de acordo com o estatuto do partido e programa partid\u00e1rio.',{x:ML,y:y,size:6.5,font:font,color:navy});y-=14;
+  page.drawText('(X) Consinto com o uso dos meus dados pessoais sens\u00edveis conforme art. 11, I, da LGPD.',{x:ML,y:y,size:6.5,font:font,color:navy});y-=10;
+  page.drawText('(X) Declaro estar de acordo com o estatuto do partido e programa partid\u00e1rio.',{x:ML,y:y,size:6.5,font:font,color:navy});y-=14;
   page.drawText('Termos em que, pe\u00e7o deferimento.',{x:ML,y:y,size:8,font:fontB,color:navy});y-=20;
   var meses=['janeiro','fevereiro','mar\u00e7o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
   var now=new Date();var mun=v('f_mun_uf')?v('f_mun_uf').split('/')[0]:'________________';
