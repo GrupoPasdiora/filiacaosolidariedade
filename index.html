@@ -121,11 +121,9 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 <div class="fg half"><label>Telefone fixo</label><div class="iw"><input id="f_fix" type="text" placeholder=""><button class="mic" onclick="mic(this,'f_fix')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button></div></div>
 <div class="fg half"><label>É WhatsApp?</label><div class="iw"><select id="f_wpp"><option value="">Selecione</option><option>Sim</option><option>Não</option></select></div></div>
 <div class="fg half"><label>Instagram</label><div class="iw"><input id="f_ig" type="text" placeholder=""><button class="mic" onclick="mic(this,'f_ig')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button></div></div>
-<div class="fg half"><label>Nome de urna</label><div class="iw"><input id="f_nome_urna" type="text" placeholder=""><button class="mic" onclick="mic(this,'f_nome_urna')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button></div></div>
 </div>
 <div class="btn-row" style="justify-content:center">
 <button class="btn btn-p" style="font-size:1.05rem;padding:14px 36px" onclick="generatePDF()">Gerar PDF da Ficha</button>
-</div></div>
 <div id="resultPanel" style="display:none">
 <div class="card result">
 <div class="big">✅</div><h2>Ficha gerada com sucesso!</h2>
@@ -182,7 +180,7 @@ async function runAI(){
   var content=[];
   for(var i=0;i<files.length;i++){var f=files[i];if(f.type.indexOf('image')===0)content.push({type:'image',source:{type:'base64',media_type:f.type,data:f.b64}})}
   var prompt='Extraia dados para ficha de filiação.';if(txt)prompt+='\nTexto:\n'+txt;
-  prompt+='\nResponda SOMENTE JSON: {"nome":"","cpf":"","rg":"","nascimento":"DD/MM/AAAA","sexo":"","estado_civil":"","cor":"","nacionalidade":"Brasileira","naturalidade":"","profissao":"","escolaridade":"","religiao":"","nome_pai":"","nome_mae":"","titulo":"","mun_titulo":"","zona":"","secao":"","endereco":"","numero":"","complemento":"","bairro":"","cep":"","municipio_uf":"","email":"","celular":"","tel_fixo":"","nome_urna":""}';
+  prompt+='\nResponda SOMENTE JSON: {"nome":"","cpf":"","rg":"","nascimento":"DD/MM/AAAA","sexo":"","estado_civil":"","cor":"","nacionalidade":"Brasileira","naturalidade":"","profissao":"","escolaridade":"","religiao":"","nome_pai":"","nome_mae":"","titulo":"","mun_titulo":"","zona":"","secao":"","endereco":"","numero":"","complemento":"","bairro":"","cep":"","municipio_uf":"","email":"","celular":"","tel_fixo":""}';
   content.push({type:'text',text:prompt});
   try{
     var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:content}]})});
@@ -194,7 +192,6 @@ async function runAI(){
   btn.disabled=false;btn.textContent='Ler e preencher com IA'
 }
 
-var FMAP={f_nome:'nome',f_cpf:'cpf',f_rg:'rg',f_nasc:'nascimento',f_sexo:'sexo',f_ec:'estado_civil',f_cor:'cor',f_nac:'nacionalidade',f_nat:'naturalidade',f_prof:'profissao',f_esc:'escolaridade',f_rel:'religiao',f_pai:'nome_pai',f_mae:'nome_mae',f_tit:'titulo',f_mun_tit:'mun_titulo',f_zona:'zona',f_secao:'secao',f_end:'endereco',f_num:'numero',f_comp:'complemento',f_bairro:'bairro',f_cep:'cep',f_mun_uf:'municipio_uf',f_email:'email',f_cel:'celular',f_fix:'tel_fixo',f_nome_urna:'nome_urna'};
 function fillForm(d){for(var k in FMAP){var el=document.getElementById(k);if(el&&d[FMAP[k]])el.value=d[FMAP[k]]}}
 
 function v(id){var el=document.getElementById(id);return el?el.value.trim():''}
@@ -248,7 +245,6 @@ async function generatePDF(){
 
   sec('CANDIDATURA');
   dr('Pretende ser candidato','N\u00e3o',['Sim','N\u00e3o']);
-  if(v('f_nome_urna'))df('Nome de urna',v('f_nome_urna'));
 
   sec('ENDERE\u00c7O');
   var ef=v('f_end')+(v('f_num')?', N\u00ba '+v('f_num'):'')+(v('f_comp')?'  -  '+v('f_comp'):'');
