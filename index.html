@@ -148,6 +148,52 @@ var LOGO_HQ_B64='iVBORw0KGgoAAAANSUhEUgAAAR0AAACMCAYAAABBJ30pAAABCGlDQ1BJQ0MgUHJ
 var isAdmin=new URLSearchParams(location.search).has('admin');
 if(isAdmin){document.getElementById('adminBar').style.display='block';document.getElementById('adminPanel').style.display='block';document.getElementById('cfgBtn').style.display='block'}
 
+
+// ==================== GOOGLE SHEETS ====================
+// Cole aqui a URL do Google Apps Script (passo 9 das instruções)
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwBspB2yVyUqpELA9SahccuDdDMMSKslsLq-M_DJdH_k3g-5JxSNHCWvT7mIteL_5uuzw/exec';  // Ex: 'https://script.google.com/macros/s/AKfycb.../exec'
+
+function saveToSheets() {
+  if (!SHEETS_URL) return;  // Silently skip if not configured
+  var data = {
+    nome: v('f_nome'),
+    cpf: v('f_cpf'),
+    rg: v('f_rg'),
+    nascimento: v('f_nasc'),
+    sexo: v('f_sexo'),
+    estado_civil: v('f_ec'),
+    cor: v('f_cor'),
+    nacionalidade: v('f_nac'),
+    naturalidade: v('f_nat'),
+    profissao: v('f_prof'),
+    escolaridade: v('f_esc'),
+    religiao: v('f_rel'),
+    nome_pai: v('f_pai'),
+    nome_mae: v('f_mae'),
+    titulo: v('f_tit'),
+    mun_titulo: v('f_mun_tit'),
+    zona: v('f_zona'),
+    secao: v('f_secao'),
+    endereco: v('f_end'),
+    numero: v('f_num'),
+    complemento: v('f_comp'),
+    bairro: v('f_bairro'),
+    cep: v('f_cep'),
+    municipio_uf: v('f_mun_uf'),
+    email: v('f_email'),
+    celular: v('f_cel'),
+    tel_fixo: v('f_fix'),
+    whatsapp: v('f_wpp'),
+    instagram: v('f_ig')
+  };
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(function(e) { console.warn('Sheets save error:', e) });
+}
+
 function showModal(){document.getElementById('apiMdl').classList.add('show');document.getElementById('keyIn').value=localStorage.getItem('claude_key')||''}
 function hideModal(){document.getElementById('apiMdl').classList.remove('show')}
 function saveKey(){var k=document.getElementById('keyIn').value.trim();if(k){localStorage.setItem('claude_key',k);hideModal()}}
@@ -205,6 +251,7 @@ async function generatePDF(){
   if(document.getElementById('adminPanel'))document.getElementById('adminPanel').style.display='none';
   document.getElementById('resultPanel').style.display='block';
   document.getElementById('resName').textContent='Ficha de: '+nome;
+  saveToSheets();
 
   var doc=await PDFLib.PDFDocument.create();
   var font=await doc.embedFont(PDFLib.StandardFonts.Helvetica);
